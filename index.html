@@ -2,10 +2,41 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Effective JavaScript: Frogger</title>
+    <title>Mule's Frogger</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-1.11.2.min.js"></script>
 </head>
 <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>Welcome to Duster's Frogger</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 center-block scores-style">
+                <h2 id="topScore" class="score">Top Score: 0</h2>
+                <h3 id="score" class="score">Score: 0</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-10">
+                <canvas class="center-block" id="frogCan"></canvas>
+            </div>
+            <div class="col-md-2 center-block flex-con">
+                <canvas class="center-block char" id="char1" width="101" height="101"></canvas>
+                <canvas class="center-block char" id="char2" width="101" height="101"></canvas>
+                <canvas class="center-block char" id="char3" width="101" height="101"></canvas>
+                <canvas class="center-block char" id="char4" width="101" height="101"></canvas>
+                <canvas class="center-block char" id="char5" width="101" height="101"></canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div id="tester" class="col-md-12">
+            </div>
+        </div>
+    </div>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
