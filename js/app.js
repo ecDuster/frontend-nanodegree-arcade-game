@@ -49,7 +49,6 @@ Enemy.prototype.update = function(dt) {
 // a handleInput() method.
 var Player = function () {
     //This Creates the Player
-    
     this.level = 1;
     this.sprite = pImg;
 };
@@ -77,8 +76,5 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    //player.handleInput(allowedKeys[e.keyCode]);
 });
-
-var xyz = document.getElementById('tester');
-xyz.innerHTML = "<h2>Wow this actually worked</h2>";
