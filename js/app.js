@@ -20,6 +20,10 @@ block.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+function floorSelect () {
+    return 63 + 83 * Math.floor(Math.random()*3);
+};
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -28,13 +32,13 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.level = player.level;
-    this.speed = Math.random() * 50 + 20;
-    if (Math.random() < 0.5) {
+    this.speed = Math.random() * 70 + 20;
+    if (Math.random() < 0.4) {
         this.dir = -1;
     } else {
         this.dir = 1;
     };
-    if (this.dir === -1) {
+    if (this.dir == -1) {
         this.sprite = 'images/enemy-bug-rev.png';
     } else {
         this.sprite = 'images/enemy-bug.png';
@@ -49,21 +53,37 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.y < 0) {
-        this.y = 63 + 83 * Math.floor(Math.random()*3);
+        this.y = floorSelect();
     };
     this.move(dt);
-    if (this.x > 555 && this.dir == 1) {
-        x = -101;
-    } else if (this.x < -202 && this.dir == -1) {
-        x = 551;
+};
+
+//This gives Players a Curve ball from enemy bugs.
+//Bugs will now randomly appear on the 2nd Grass level... No where is safe!
+Enemy.prototype.surprise = function () {
+    if (player.level > 4) {
+        if ( Math.random() < 0.1 ) {
+            this.y = 63 + 83 * 3;
+        };
     };
 };
 
 Enemy.prototype.move = function (dt) {
     if (this.dir == -1) {
+        if (this.x < -151) {
+            this.x = 555;
+            this.y = floorSelect();
+            this.surprise();
+        };
         this.x -= player.level*this.speed*dt;
     } else {
+        if (this.x > 555) {
+            this.x = -151;
+            this.y = floorSelect();
+            this.surprise();
+        };
         this.x += player.level*this.speed*dt;
+        
     };
 };
 // Draw the enemy on the screen, required method for game
@@ -74,9 +94,8 @@ Enemy.prototype.move = function (dt) {
 var Player = function () {
 
     this.level = 1;
-
-
-    this.sprite = 'images/char-boy.png';//This makes the image of the player inaccessable from the console (With out the get & set functions)
+    this.lives = 3;
+    this.sprite = 'images/char-boy.png';
     this.score = 0;
     this.Topscore = 0;
 };
@@ -89,29 +108,34 @@ Player.prototype.update = function(dt) {
 };
 
 Player.prototype.handleInput = function (input) {
-    switch(input) {
-        case "left":
-            if (this.x > 100) {
-                this.x -= 101;
-            };
-            break;
-        case "right":
-            if (this.x < 404) {
-                this.x += 101;
-            };
-            break;
-        case "up":
-            if (this.y > 62) {
-                this.y -= 83;
-            };
-            break;
-        case "down":
-            if (this.y < 395) {
-                this.y += 83;
-            };
-            break;
-        default:
-            break;
+    if (player.lives > 0) {
+        switch(input) {
+            case "left":
+                if (this.x > 100) {
+                    this.x -= 101;
+                };
+                break;
+            case "right":
+                if (this.x < 404) {
+                    this.x += 101;
+                };
+                break;
+            case "up":
+                if (this.y > 62) {
+                    this.y -= 83;
+                };
+                break;
+            case "down":
+                if (this.y < 395) {
+                    this.y += 83;
+                };
+                break;
+            case "s":
+                this.level = prompt("Set Player Level. (Must use a number)");
+                break;
+            default:
+                break;
+        };
     };
 };
 
@@ -129,7 +153,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        83: 's'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
