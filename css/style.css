@@ -3,7 +3,7 @@ body {
 }
 
 .container {
-    max-width: 620px;
+    max-width: 530px;
 }
 
 /*Sets the Styles for the Top Score*/
@@ -29,7 +29,7 @@ body {
 }
 
 .char {
-    margin: 3px auto;   
+    margin: 3px auto;
 }
 
 /* If played in a smaller window, this moves Character into a row instead of a column*/
