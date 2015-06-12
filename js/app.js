@@ -1,7 +1,7 @@
 
 //Parent Class to all pieces on the board
 //This checks that any newly created piece has a valid position, if not moves it off the canvas
-var block = function (x, y) {
+var Block = function (x, y) {
     this.width = 101;
     this.height = 171;
     if ( x || x === 0 ) {
@@ -16,23 +16,35 @@ var block = function (x, y) {
     };
 };
 
-block.prototype.render = function () {
+Block.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    this.crashChk();
+};
+
+Block.prototype.crashChk = function () {
+    if (this.constructor === Enemy) {
+        if (this.y == player.y) {
+            //if ((this.x + 3) > (player.x + 18) && (this.x + 97) <= (player.x + 82)) {
+            var enLeft = this.x + 3;
+            var plLeft = player.x + 14;
+            var enRight = this.x + 97;
+            var plRight = player.x + 82;
+            if ( enRight > plLeft && enLeft < plRight) {
+                alert("Player Hit by Bug");
+                player.death();
+            };
+        };
+    };
 };
 
 function floorSelect () {
     return 63 + 83 * Math.floor(Math.random()*3);
 };
 
-// Enemies our player must avoid
+// The Enemy Subclass
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.level = player.level;
-    this.speed = Math.random() * 70 + 20;
+    this.speed = Math.random() * 40 + 30;
     if (Math.random() < 0.4) {
         this.dir = -1;
     } else {
@@ -45,13 +57,10 @@ var Enemy = function() {
     };
 };
 
-Enemy.prototype = new block();
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+Enemy.prototype = new Block();
+
+
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
     if (this.y < 0) {
         this.y = floorSelect();
     };
@@ -59,9 +68,9 @@ Enemy.prototype.update = function(dt) {
 };
 
 //This gives Players a Curve ball from enemy bugs.
-//Bugs will now randomly appear on the 2nd Grass level... No where is safe!
+//Bugs will now randomly appear on the 2nd Grass level when a player reachs level 4... No where is safe!
 Enemy.prototype.surprise = function () {
-    if (player.level > 4) {
+    if (player.level > 5) {
         if ( Math.random() < 0.1 ) {
             this.y = 63 + 83 * 3;
         };
@@ -69,7 +78,7 @@ Enemy.prototype.surprise = function () {
 };
 
 Enemy.prototype.move = function (dt) {
-    if (this.dir == -1) {
+    if (this.dir == -1) { //This resets bugs possition one it has moved so far off the board for enemies going left
         if (this.x < -151) {
             this.x = 555;
             this.y = floorSelect();
@@ -77,20 +86,27 @@ Enemy.prototype.move = function (dt) {
         };
         this.x -= player.level*this.speed*dt;
     } else {
-        if (this.x > 555) {
+        if (this.x > 555) { //This resets bugs possition one it has moved so far off the board for enemies going right
             this.x = -151;
             this.y = floorSelect();
             this.surprise();
         };
         this.x += player.level*this.speed*dt;
-        
+
     };
 };
-// Draw the enemy on the screen, required method for game
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+var allEnemies = [];
+
+function resetAllEnemies () { //Resets Enemies to the beginning number of 2
+    for(var i = 0; i < 2; i++){
+        var enemy = new Enemy();
+        enemy.constructor = Enemy;
+        allEnemies.push(enemy);
+    };
+};
+
+//This is the Player class with the neccisary requirements
 var Player = function () {
 
     this.level = 1;
@@ -101,13 +117,14 @@ var Player = function () {
 };
 
 
-Player.prototype = new block(202, 63+83*4);
+Player.prototype = new Block(202, 63+83*4);
 
 Player.prototype.update = function(dt) {
-
+    
 };
 
 Player.prototype.handleInput = function (input) {
+    //This is checks that the player is alive. If he is, then he can move.
     if (player.lives > 0) {
         switch(input) {
             case "left":
@@ -139,16 +156,21 @@ Player.prototype.handleInput = function (input) {
     };
 };
 
+Player.prototype.death = function () {
+    this.lives --;
+    alert("Player lives remaining: " + this.lives);
+    player.x = 202;
+    player.y = 63+83*4;
+};
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var player = new Player();
-
-var allEnemies = [new Enemy(), new Enemy(), new Enemy(), new Enemy(), new Enemy(), new Enemy()];
+player.constructor = Player;
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',

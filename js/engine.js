@@ -160,6 +160,9 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+
+
+        resetAllEnemies();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
