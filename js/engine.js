@@ -77,6 +77,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        allGems.forEach(function(gem) {
+            gem.update(dt);
+        });
         player.update(dt);
     }
 
@@ -135,6 +138,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
+        allGems.forEach(function(gem) {
+            gem.render();
+        });
     }
 
     /* This function does nothing but it could have been a good place to
@@ -142,10 +148,8 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
 
-
-        resetAllEnemies();
+        resetAllItems();
     }
 
     /* Go ahead and load all of the images we know we're going to need to

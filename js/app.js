@@ -4,9 +4,9 @@ This sets the basic starting point for all pieces
 
 This checks that any newly created piece has a valid position
         ~if not moves it off the canvas
+
 ******************************************************************/
-//Parent Class to all pieces on the board
-//This checks that any newly created piece has a valid position, if not moves it off the canvas
+
 var Block = function (x, y) {
     this.width = 101;
     this.height = 171;
@@ -42,6 +42,14 @@ Block.prototype.crashChk = function () {
             };
         };
     };
+    if (this.constructor === Items) {
+        if (this.y == player.y) {
+            if (this.x + 97 > player.x + 16 && this.x + 4 < player.x + 82 && !player.dead) {
+                player.score += this.score;
+                this.show = false;
+            };
+        };
+    };
 };
 
 function floorSelect () {
@@ -54,6 +62,7 @@ function floorSelect () {
 This sets the basic starting point for each player
 
 ******************************************************************/
+
 var Enemy = function() {
     this.level = player.level;
     this.speed = Math.random() * 40 + 30;
@@ -70,7 +79,6 @@ var Enemy = function() {
 };
 
 Enemy.prototype = new Block();
-
 
 Enemy.prototype.update = function(dt) {
     if (this.y < 0) {
@@ -107,14 +115,6 @@ Enemy.prototype.move = function (dt) {
     };
 };
 
-function resetAllEnemies () { //RESET ENEMYS to BEGINNING NUM OF 2
-    for(var i = 0; i < 2; i++){
-        var enemy = new Enemy();
-        enemy.constructor = Enemy;
-        allEnemies.push(enemy);
-    };
-};
-
 /*****************************************************************
                           PLAYER CLASS
    This sets the basic starting point for values of each player
@@ -125,7 +125,9 @@ sprite - the image thats drawn for each player
 dead - boolean value of if player is dead or not
 score - the name explains itself
 topScore - .... no you don't get an explanation
+
 ******************************************************************/
+
 var Player = function () {
     this.level = 1;
     this.time = 0;
@@ -136,8 +138,8 @@ var Player = function () {
     this.dead = false;
     this.score = 0;
     this.topScore = 0;
+    this.gameOver = false;
 };
-
 
 Player.prototype = new Block(202, 63+83*4);
 
@@ -148,12 +150,17 @@ Player.prototype.update = function(dt) {
         if (this.timeDead > 1) {
             this.reset();
         };
-    } else if (this.dead && this.lives === 0) {
+    };
+    if (this.lives === 0) {
+        this.gameOver = true;
+    };
+    if (this.gameOver) {
         this.sprite = "images/skull-cartoon.png";
-    }
+    };
+    if (this.score > this.topScore) {
+        this.topScore = this.score;
+    };
 };
-
-
 
 Player.prototype.reset = function () {
     this.x = 202;
@@ -210,9 +217,101 @@ Player.prototype.handleInput = function (input) {
 };
 
 /*****************************************************************
+                      EXTRA ITEMS CLASS
+MUST SET WHAT THE ITEM IS TO USE 'ITEMS' CLASS
+
+Select a Item:
+   "orange" - Orange Gem: Worth 10 points
+   "green" - Green Gem: Worth 25 points
+   "blue" - Blue Gem: Worth 80 points
+   "heart" - Gives people a life
+   "star" - Makes player invulnerable
+   "rock" - Creates a rock
+
+******************************************************************/
+var Items = function (item) {
+    switch (item) {
+        case 'orange':
+            this.id = item;
+            this.score = 10;
+            this.sprite = "images/Gem Orange.png";
+            this.tTime = 13;
+            this.chance = 0.7;
+            break;
+        case 'green':
+            this.id = item;
+            this.score = 40;
+            this.sprite = "images/Gem Green.png";
+            this.tTime = 9;
+            this.chance = 0.4;
+            break;
+        case 'blue':
+            this.id = item;
+            this.score = 80;
+            this.sprite = "images/Gem Blue.png";
+            this.tTime = 5;
+            this.chance = 0.2;
+            break;
+        case 'heart':
+            this.id = item;
+            break;
+        case 'star':
+            this.id = item;
+            break;
+        case 'rock':
+            this.id = item;
+            break;
+        default:
+            break;
+    };
+    this.show = false;
+    this.sTime = 0;
+    this.tTime = 0;
+};
+
+Items.prototype = new Block();
+
+Items.prototype.update = function (dt) {
+    if (!this.show && Math.random() < this.chance) {
+        this.show = true;
+        this.move(dt);
+    } else if (this.show && this.sTime <= this.tTime) {
+        this.sTime += dt;
+    } else if (this.show && this.sTime > this.tTime) {
+        this.show = false;
+        this.x = -101;
+        this.y = -171;
+    };
+};
+
+Items.prototype.move = function (dt) {
+    this.x = 101 * Math.floor(Math.random() * 5);
+    this.y = 63 + 83 * Math.floor(Math.random() * 3);    
+};
+
+/*****************************************************************
+                      CUSTOM FUNCTIONS
+
+******************************************************************/
+
+function resetAllItems () { //RESET ENEMYS ANG GEMS TO BEGINNING NUM
+    for (var i = 0; i < 2; i++) {
+        var enemy = new Enemy();
+        enemy.constructor = Enemy;
+        allEnemies.push(enemy);
+    };
+    for (var i = 0; i < 3; i++) {
+        var gem = new Items('orange');
+        gem.constructor = Items;
+        allGems.push(gem);
+    };
+};
+
+/*****************************************************************
                       GAME START PROPERTIES
 
 ******************************************************************/
+var allGems = [];
 var allEnemies = [];
 var player = new Player();
 player.constructor = Player;
