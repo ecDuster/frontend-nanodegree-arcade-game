@@ -42,7 +42,7 @@ Block.prototype.crashChk = function () {
             };
         };
     };
-    if (this.constructor === Items) {
+    if (this.constructor === Item) {
         if (this.y == player.y) {
             if (this.x + 97 > player.x + 16 && this.x + 4 < player.x + 82 && !player.dead) {
                 player.score += this.score;
@@ -130,6 +130,7 @@ topScore - .... no you don't get an explanation
 
 var Player = function () {
     this.level = 1;
+    this.levelUS = 200// SETS THE MULTIPLIER TO POINTS REQUIRED TO LEVEL UP
     this.time = 0;
     this.timeDead = 0;
     this.lives = 3;
@@ -151,7 +152,7 @@ Player.prototype.update = function(dt) {
             this.reset();
         };
     };
-    if (this.lives === 0) {
+    if (this.lives === 0) { //CHECKS IF PLAYER HAS LOST ALL LIVES
         this.gameOver = true;
     };
     if (this.gameOver) {
@@ -159,6 +160,31 @@ Player.prototype.update = function(dt) {
     };
     if (this.score > this.topScore) {
         this.topScore = this.score;
+    };
+    this.levelUp(dt);
+};
+
+Player.prototype.levelUp = function (dt) {
+    if (this.score > this.levelUS * this.level) {
+        this.level ++
+        if (this.level % 2 == 0) {
+            allEnemies.push(new Enemy());
+            allEnemies[allEnemies.length - 1].constructor = Enemy;
+        };
+        if (Math.random() < 0.2) {
+            allGems.push(new Item('blue'));
+            allGems[allGems.length - 1].constructor = Item;
+            allGems.push(new Item('green'));
+            allGems[allGems.length - 1].constructor = Item;
+        } else if (Math.random() < 0.5) {
+            allGems.push(new Item('green'));
+            allGems[allGems.length - 1].constructor = Item;
+            allGems.push(new Item('green'));
+            allGems[allGems.length - 1].constructor = Item;
+        } else {
+            allGems.push(new Item ('orange'));
+            allGems[allGems.length - 1].constructor = Item;
+        }
     };
 };
 
@@ -229,7 +255,7 @@ Select a Item:
    "rock" - Creates a rock
 
 ******************************************************************/
-var Items = function (item) {
+var Item = function (item) {
     switch (item) {
         case 'orange':
             this.id = item;
@@ -266,25 +292,32 @@ var Items = function (item) {
     };
     this.show = false;
     this.sTime = 0;
-    this.tTime = 0;
+    this.hTime = 0;
 };
 
-Items.prototype = new Block();
+Item.prototype = new Block();
 
-Items.prototype.update = function (dt) {
-    if (!this.show && Math.random() < this.chance) {
+Item.prototype.update = function (dt) {
+    if (!this.show && Math.random() < this.chance && this.hTime > 2) {
         this.show = true;
-        this.move(dt);
-    } else if (this.show && this.sTime <= this.tTime) {
-        this.sTime += dt;
-    } else if (this.show && this.sTime > this.tTime) {
-        this.show = false;
+        this.hTime = 0;
+        this.move();
+    } else if (!this.show) {
+        this.hTime += dt;
         this.x = -101;
         this.y = -171;
     };
+    if (this.show && this.sTime > this.tTime) {
+        this.show = false;
+        this.x = -101;
+        this.y = -171;
+        this.sTime = 0;
+    } else if (this.show) {
+        this.sTime += dt;
+    };
 };
 
-Items.prototype.move = function (dt) {
+Item.prototype.move = function () {
     this.x = 101 * Math.floor(Math.random() * 5);
     this.y = 63 + 83 * Math.floor(Math.random() * 3);    
 };
@@ -301,20 +334,11 @@ function resetAllItems () { //RESET ENEMYS ANG GEMS TO BEGINNING NUM
         allEnemies.push(enemy);
     };
     for (var i = 0; i < 3; i++) {
-        var gem = new Items('orange');
-        gem.constructor = Items;
+        var gem = new Item('orange');
+        gem.constructor = Item;
         allGems.push(gem);
     };
 };
-
-/*****************************************************************
-                      GAME START PROPERTIES
-
-******************************************************************/
-var allGems = [];
-var allEnemies = [];
-var player = new Player();
-player.constructor = Player;
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -330,3 +354,12 @@ document.addEventListener('keydown', function(e) {
     //alert(e.keyCode);
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+/*****************************************************************
+                      GAME START PROPERTIES
+
+******************************************************************/
+var allGems = [];
+var allEnemies = [];
+var player = new Player();
+player.constructor = Player;
