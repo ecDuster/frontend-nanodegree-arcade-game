@@ -27,35 +27,19 @@ var Engine = (function(global) {
 
     canvas.width = 505;
     canvas.height = 606;
-    //doc.body.appendChild(canvas);
 
-    /* This function serves as the kickoff point for the game loop itself
-     * and handles properly calling the update and render methods.
-     */
     function main() {
-        /* Get our time delta information which is required if your game
-         * requires smooth animation. Because everyone's computer processes
-         * instructions at different speeds we need a constant value that
-         * would be the same for everyone (regardless of how fast their
-         * computer is) - hurray time!
-         */
+
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
-
-        /* Call our update/render functions, pass along the time delta to
-         * our update function since it may be used for smooth animation.
-         */
+        
+        //alert(dt); ** THIS HELPED ME FIGURE OUT HOW TO USE DT!!!!! **
+        
         update(dt);
         render();
 
-        /* Set our lastTime variable which is used to determine the time delta
-         * for the next time this function is called.
-         */
         lastTime = now;
 
-        /* Use the browser's requestAnimationFrame function to call this
-         * function again as soon as the browser is able to draw another frame.
-         */
         win.requestAnimationFrame(main);
     };
 
@@ -80,7 +64,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -94,7 +77,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        player.update(dt);
     }
 
     /* This function initially draws the "game level", it will then call
@@ -181,6 +164,7 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',
         'images/char-pink-girl.png',
         'images/char-princess-girl.png',
+        'images/skull-cartoon.png',
         'images/enemy-bug.png',
         'images/Gem Blue.png',
         'images/Gem Green.png',

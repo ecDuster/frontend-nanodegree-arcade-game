@@ -1,4 +1,10 @@
+/*****************************************************************
+                          Block Parent CLASS
+This sets the basic starting point for all pieces
 
+This checks that any newly created piece has a valid position
+        ~if not moves it off the canvas
+******************************************************************/
 //Parent Class to all pieces on the board
 //This checks that any newly created piece has a valid position, if not moves it off the canvas
 var Block = function (x, y) {
@@ -18,20 +24,21 @@ var Block = function (x, y) {
 
 Block.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    this.crashChk();
+    this.crashChk(); //You need to check crashes after the image is drawn. This is because from a players point of view they wouldn't have been hit by the object yet.
 };
 
 Block.prototype.crashChk = function () {
     if (this.constructor === Enemy) {
         if (this.y == player.y) {
-            //if ((this.x + 3) > (player.x + 18) && (this.x + 97) <= (player.x + 82)) {
-            var enLeft = this.x + 3;
-            var plLeft = player.x + 14;
-            var enRight = this.x + 97;
-            var plRight = player.x + 82;
-            if ( enRight > plLeft && enLeft < plRight) {
-                alert("Player Hit by Bug");
+            if (this.x + 97 > player.x + 16 && this.x + 4 < player.x + 82 && !player.dead) {
                 player.death();
+            };
+        };
+    };
+    if (this.constructor === Player) {
+        if (!this.dead) {
+            if (this.y < -19) {
+                this.death();
             };
         };
     };
@@ -41,7 +48,12 @@ function floorSelect () {
     return 63 + 83 * Math.floor(Math.random()*3);
 };
 
-// The Enemy Subclass
+/*****************************************************************
+                         ENEMY CLASS
+
+This sets the basic starting point for each player
+
+******************************************************************/
 var Enemy = function() {
     this.level = player.level;
     this.speed = Math.random() * 40 + 30;
@@ -67,8 +79,8 @@ Enemy.prototype.update = function(dt) {
     this.move(dt);
 };
 
-//This gives Players a Curve ball from enemy bugs.
-//Bugs will now randomly appear on the 2nd Grass level when a player reachs level 4... No where is safe!
+//GIVES PLAYERS A CURVE BALL AT LEVEL 5
+//TRY THE GAME TO SEE IF YOU CAN SURVIVE IT!
 Enemy.prototype.surprise = function () {
     if (player.level > 5) {
         if ( Math.random() < 0.1 ) {
@@ -78,7 +90,7 @@ Enemy.prototype.surprise = function () {
 };
 
 Enemy.prototype.move = function (dt) {
-    if (this.dir == -1) { //This resets bugs possition one it has moved so far off the board for enemies going left
+    if (this.dir == -1) {//RESETS BUG POSITION TO START FOR BUGS GOING LEFT
         if (this.x < -151) {
             this.x = 555;
             this.y = floorSelect();
@@ -86,19 +98,16 @@ Enemy.prototype.move = function (dt) {
         };
         this.x -= player.level*this.speed*dt;
     } else {
-        if (this.x > 555) { //This resets bugs possition one it has moved so far off the board for enemies going right
+        if (this.x > 555) { //RESETS BUG POSITION TO START FOR BUGS GOING RIGHT
             this.x = -151;
             this.y = floorSelect();
             this.surprise();
         };
         this.x += player.level*this.speed*dt;
-
     };
 };
 
-var allEnemies = [];
-
-function resetAllEnemies () { //Resets Enemies to the beginning number of 2
+function resetAllEnemies () { //RESET ENEMYS to BEGINNING NUM OF 2
     for(var i = 0; i < 2; i++){
         var enemy = new Enemy();
         enemy.constructor = Enemy;
@@ -106,65 +115,105 @@ function resetAllEnemies () { //Resets Enemies to the beginning number of 2
     };
 };
 
-//This is the Player class with the neccisary requirements
-var Player = function () {
+/*****************************************************************
+                          PLAYER CLASS
+   This sets the basic starting point for values of each player
 
+level - Players Current level (Game gets harder with high level)
+time  - keep track of game time & how long a players been dead
+sprite - the image thats drawn for each player
+dead - boolean value of if player is dead or not
+score - the name explains itself
+topScore - .... no you don't get an explanation
+******************************************************************/
+var Player = function () {
     this.level = 1;
+    this.time = 0;
+    this.timeDead = 0;
     this.lives = 3;
     this.sprite = 'images/char-boy.png';
+    this.oldSprite = this.sprite;
+    this.dead = false;
     this.score = 0;
-    this.Topscore = 0;
+    this.topScore = 0;
 };
 
 
 Player.prototype = new Block(202, 63+83*4);
 
 Player.prototype.update = function(dt) {
-    
+    if (this.dead) { //CHECKS TO SEE IF PLAYER DIED
+        this.sprite = "images/skull-cartoon.png";
+        this.timeDead += dt;
+        if (this.timeDead > 1) {
+            this.reset();
+        };
+    } else if (this.dead && this.lives === 0) {
+        this.sprite = "images/skull-cartoon.png";
+    }
+};
+
+
+
+Player.prototype.reset = function () {
+    this.x = 202;
+    this.y = 63+83*4;
+    this.sprite = this.oldSprite;
+    this.timeDead = 0;
+    this.dead = false;
+};
+
+Player.prototype.death = function () {
+    this.lives --;
+    this.dead = true;
 };
 
 Player.prototype.handleInput = function (input) {
     //This is checks that the player is alive. If he is, then he can move.
-    if (player.lives > 0) {
+    if (this.lives > 0 && !this.dead) {
         switch(input) {
             case "left":
                 if (this.x > 100) {
+                    this.x.last = this.x;
                     this.x -= 101;
                 };
                 break;
             case "right":
                 if (this.x < 404) {
+                    this.x.last = this.x;
                     this.x += 101;
                 };
                 break;
             case "up":
                 if (this.y > 62) {
+                    this.y.last = this.y;
                     this.y -= 83;
                 };
                 break;
             case "down":
                 if (this.y < 395) {
+                    this.y.last = this.y;
                     this.y += 83;
                 };
-                break;
-            case "s":
-                this.level = prompt("Set Player Level. (Must use a number)");
                 break;
             default:
                 break;
         };
     };
+    if (input == "s") {
+        this.level = prompt("Set Player Level. (Must use a number)");
+        this.lives = prompt("Set Player Lives. (Must use a number)");
+    };
+    if (input == "d") {
+        this.reset();
+    };
 };
 
-Player.prototype.death = function () {
-    this.lives --;
-    alert("Player lives remaining: " + this.lives);
-    player.x = 202;
-    player.y = 63+83*4;
-};
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+/*****************************************************************
+                      GAME START PROPERTIES
+
+******************************************************************/
+var allEnemies = [];
 var player = new Player();
 player.constructor = Player;
 
@@ -176,8 +225,9 @@ document.addEventListener('keydown', function(e) {
         38: 'up',
         39: 'right',
         40: 'down',
-        83: 's'
+        83: 's',
+        68: 'd'
     };
-
+    //alert(e.keyCode);
     player.handleInput(allowedKeys[e.keyCode]);
 });
