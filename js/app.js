@@ -1,5 +1,7 @@
 /*****************************************************************
-                          Block Parent CLASS
+                          
+                          BLOCK CLASS (PARENT)
+                          
 This sets the basic starting point for all pieces
 
 This checks that any newly created piece has a valid position
@@ -19,64 +21,72 @@ var Block = function (x, y) {
         this.y = y;
     } else {
         this.y = -171;
-    };
-};
+    }
+}
 
 Block.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    this.crashChk(); //You need to check crashes after the image is drawn. This is because from a players point of view they wouldn't have been hit by the object yet.
+    this.crashChk() //You need to check crashes after the image is drawn. This is because from a players point of view they wouldn't have been hit by the object yet.
     if (this.constructor === Player) {
-    };
-    if (this.constructor === Enemy) {
+        this.scoreBoard();
+    }
+    /*if (this.constructor === Enemy) {
         if (player.gameOver === true) {
             ctx.drawImage(Resources.get(player.imgGameOver), 55, 63+83+30);
-        } else if (player.dead === true && player.y < 62) {
+        } else if (player.dead === true && player.y < 63) {
             ctx.drawImage(Resources.get(player.imgDrown), 55, 63+83+30);
         } else if (player.dead === true && player.y > 62) {
             ctx.drawImage(Resources.get(player.imgEaten), 55, 63+83+30);
-        };
-    };
+        }
+    }*/
+    if (player.gameOver === true) {
+        ctx.drawImage(Resources.get(player.imgGameOver), 55, 63+83+30);
+    } else if (player.dead === true && player.y < 63) {
+        ctx.drawImage(Resources.get(player.imgDrown), 55, 63+83+30);
+    } else if (player.dead === true && player.y > 62) {
+        ctx.drawImage(Resources.get(player.imgEaten), 55, 63+83+30);
+    }
 
-};
+}
 
 Block.prototype.crashChk = function () {
     if (this.constructor === Enemy) {
         if (this.y == player.y) {
             if (this.x + 97 > player.x + 16 && this.x + 4 < player.x + 82 && !player.dead) {
                 player.death();
-            };
-        };
-    };
+            }
+        }
+    }
     if (this.constructor === Player) {
         if (!this.dead) {
-            if (this.y < -19) {
-                this.death();
-            };
-        };
-    };
+            if (this.y < 62) {
+                player.death();
+            }
+        }
+    }
     if (this.constructor === Item) {
         if (this.y == player.y) {//CHECKS TO SEE IS PLAYER LANDED ON ITEM
             if (this.x + 97 > player.x + 16 && this.x + 4 < player.x + 82) {
                 if (this.id == "orange" || this.id == "green" || this.id == "blue") {
                     player.score += this.score;
                     this.show = false;
-                };
-            };
-        };
-        allGems.forEach(function (gem) {
-            if (this.x + 97 >= gem.x + 16 && this.x + 4 <= gem.x + 82) {
-                this.show = false;
-            };
-        });
-    };
-};
+                }
+                if (this.id == "heart") {
+                    player.lives++;
+                    this.show = false;
+                }
+            }
+        }
+    }
+}
 
 function floorSelect () {
     return 63 + 83 * Math.floor(Math.random()*3);
 };
 
 /*****************************************************************
-                         ENEMY CLASS
+                         
+                         ENEMY CLASS (CHILD)
 
 This sets the basic starting point for each player
 
@@ -89,13 +99,13 @@ var Enemy = function() {
         this.dir = -1;
     } else {
         this.dir = 1;
-    };
+    }
     if (this.dir == -1) {
         this.sprite = "images/enemy-bug-rev.png";
     } else {
         this.sprite = "images/enemy-bug.png";
-    };
-};
+    }
+}
 
 Enemy.prototype = new Block();
 
@@ -113,9 +123,9 @@ Enemy.prototype.surprise = function () {
     if (player.level > 5) {
         if ( Math.random() < 0.1 ) {
             this.y = 63 + 83 * 3;
-        };
-    };
-};
+        }
+    }
+}
 
 Enemy.prototype.move = function (dt) {
     if (this.dir == -1) {//RESETS BUG POSITION TO START FOR BUGS GOING LEFT
@@ -123,20 +133,22 @@ Enemy.prototype.move = function (dt) {
             this.x = 555;
             this.y = floorSelect();
             this.surprise();
-        };
+        }
         this.x -= this.level*this.speed*dt;
     } else {
         if (this.x > 555) { //RESETS BUG POSITION TO START FOR BUGS GOING RIGHT
             this.x = -151;
             this.y = floorSelect();
             this.surprise();
-        };
+        }
         this.x += this.level*this.speed*dt;
-    };
-};
+    }
+}
 
 /*****************************************************************
-                          PLAYER CLASS
+                          
+                        PLAYER CLASS (CHILD)
+                          
    This sets the basic starting point for values of each player
 
 level - Players Current level (Game gets harder with high level)
@@ -152,7 +164,7 @@ topScore - .... no you don't get an explanation
 
 var Player = function () {
     this.level = 1;
-    this.levelUS = 100// SETS THE MULTIPLIER TO POINTS REQUIRED TO LEVEL UP
+    this.levelUS = 200// SETS THE MULTIPLIER TO POINTS REQUIRED TO LEVEL UP
     this.time = 0;
     this.timeDead = 0;
     this.lives = 3;
@@ -162,7 +174,7 @@ var Player = function () {
     this.score = 0;
     this.topScore = 0;
     this.gameOver = false;
-};
+}
 
 Player.prototype = new Block(202, 63+83*4);
 
@@ -172,40 +184,45 @@ Player.prototype.update = function(dt) {
         this.timeDead += dt;
         if (this.timeDead > 3) {
             this.reset();
-        };
-    };
-    if (this.lives === 0) { //CHECKS IF PLAYER HAS LOST ALL LIVES
+        }
+    }
+    if (this.lives == 0) { //CHECKS IF PLAYER HAS LOST ALL LIVES
         this.gameOver = true;
-    };
-    if (this.gameOver) {
         this.sprite = "images/skull-cartoon.png";
-    };
+    }
+    //if (this.gameOver) {
+    //    this.sprite = "images/skull-cartoon.png";
+    //}
     if (this.score > this.topScore) { //CHECKS IF NEW HIGH SCORE REACHED
         this.topScore = this.score;
-    };
+    }
     this.levelUp(dt); //CHECKS FOR NEED OF PLAYER LEVEL UP
-};
+}
 
 Player.prototype.levelUp = function (dt) {//LEVELS PLAYER UP
-    if (this.score > this.levelUS * this.level) {//CHECKS IF PLAYERS POINTS HAVE REACHED NEXT LEVEL
+    if (this.score > this.levelUS) {//CHECKS IF PLAYERS POINTS HAVE REACHED NEXT LEVEL
         this.level ++
+        this.levelUS += this.levelUS;
+        if (this.level > 4) {
+            this.levelUS -= this.levelUS / 4;
+        }
         if (this.level % 2 == 0) {
-            if (allEnemies.length < 6) {
+            if (allEnemies.length < 4) {
                 allEnemies.push(new Enemy());
                 allEnemies[allEnemies.length - 1].constructor = Enemy;
-            };
-        };
-        if (allGems.length < 10) {
+            }
+        }
+        if (allItems.length < 10) {
             if (Math.random() < 0.2) {
                 addItem("blue");
             } else if (Math.random() < 0.4) {
                 addItem("green");
             } else if (Math.random() < 0.7) {
                 addItem("orange");
-            };
-        };
-    };
-};
+            }
+        }
+    }
+}
 
 Player.prototype.reset = function () {
     this.x = 202;
@@ -213,60 +230,89 @@ Player.prototype.reset = function () {
     this.sprite = this.oldSprite;
     this.timeDead = 0;
     this.dead = false;
-};
+}
 
 Player.prototype.death = function () {
     this.lives --;
     this.dead = true;
-};
+}
 
 Player.prototype.handleInput = function (input) {
     //This is checks that the player is alive. If he is, then he can move.
+    this.xLast = this.x;
+    this.yLast = this.y;
     if (this.lives > 0 && !this.dead) {
         switch(input) {
             case "left":
                 if (this.x > 100) {
-                    this.x.last = this.x;
                     this.x -= 101;
-                };
+                }
                 break;
             case "right":
                 if (this.x < 404) {
-                    this.x.last = this.x;
                     this.x += 101;
-                };
+                }
                 break;
             case "up":
                 if (this.y > 62) {
-                    this.y.last = this.y;
                     this.y -= 83;
-                };
+                }
                 break;
             case "down":
                 if (this.y < 395) {
-                    this.y.last = this.y;
                     this.y += 83;
-                };
+                }
                 break;
             default:
                 break;
-        };
-    };
+        }
+    }
     if (input == "s") {
         this.level = prompt("Set Player Level. (Must use a number)");
         this.lives = prompt("Set Player Lives. (Must use a number)");
-    };
+    }
     if (input == "d") {
         resetAllItems();
-    };
-};
+    }
+}
+
+Player.prototype.scoreBoard = function () { //DRAWS THE SCORE BOARD
+    ctx.font = "bold 25px Verdana";
+    ctx.fillStyle = "black";
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 1;
+    
+    //DRAW THE SCORE
+    ctx.fillText("SCORE: " + this.score, 0, 20);
+    
+    //DRAW THE LIVES
+    ctx.font = "25px Verdana";
+    ctx.textAlign = "right";
+    ctx.fillText(":LIVES", 505, 20);
+    for (var i = 0; i < this.lives; i++) {
+        if (i >= 3) {
+            ctx.drawImage(Resources.get('images/scoreplus.png'), 392 -27 * i, 0);
+            break;
+        }
+        ctx.drawImage(Resources.get('images/scoreheart.png'), 392 - 27 * i, 0);
+    }
+    //DRAW LEVELS
+    ctx.fillText(this.level + " :LEVEL", 505, 45);
+    
+    //DRAW THE TOP-SCORE
+    ctx.font = "bold 18px Verdana";
+    ctx.textAlign = "left";
+    ctx.fillText("TOP-SCORE: " + this.topScore, 0, 45);
+}
 
 Player.prototype.plSelect = function () {
 
-};
+}
 
 /*****************************************************************
-                      EXTRA ITEMS CLASS
+
+                        EXTRA ITEMS CLASS (CHILD)
+
 MUST SET WHAT THE ITEM IS TO USE 'ITEMS' CLASS
 
 Select a Item:
@@ -274,62 +320,92 @@ Select a Item:
    "green" - Green Gem: Worth 25 points
    "blue" - Blue Gem: Worth 80 points
    "heart" - Gives people a life
-   "star" - Makes player invulnerable
+   "star" - Makes player invulnerable //NOT PROGRAMED IN YET
    "rock" - Creates a rock
 
 ******************************************************************/
+
 var Item = function (item) {
     switch (item) {
         case "orange":
             this.id = item;
-            this.score = 10;
+            this.score = 25;
             this.sprite = "images/Gem Orange.png";
             this.tTime = 13;
             this.chance = 0.7; //70% CHANCE OF THIS PIECE SHOWING
+            this.hTime = 3;
             break;
         case "green":
             this.id = item;
-            this.score = 40;
+            this.score = 80;
             this.sprite = "images/Gem Green.png";
             this.tTime = 10;
             this.chance = 0.4; //40% CHANCE OF THIS PIECE SHOWING
+            this.hTime = 3;
             break;
         case "blue":
             this.id = item;
-            this.score = 80;
+            this.score = 150;
             this.sprite = "images/Gem Blue.png";
             this.tTime = 7;
             this.chance = 0.2; //20% CHANCE OF THIS PIECE SHOWING
+            this.hTime = 3;
             break;
         case "heart":
             this.id = item;
+            this.tTime = 7;
+            this.sprite = "images/Heart.png";
+            this.chance = 0.1;
+            this.hTime = 10;
             break;
         case "star":
             this.id = item;
+            this.sprite = "images/Star.png";
+            this.tTime = 5;
+            this.chance = 0.02;
+            this.hTime = 30;
             break;
         case "rock":
             this.id = item;
+            this.sprite = "images/Rock.png";
+            this.tTime = 20;
+            this.chance = 0.8;
+            this.hTime = 2;
             break;
         default:
             break;
-    };
+    }
     this.show = false;
     this.sTime = 0;
     this.holdTime = 0;
-};
+}
 
 Item.prototype = new Block();
 
 Item.prototype.update = function (dt) {
-    if (!this.show && Math.random() < this.chance && this.holdTime > 1 * player.level) {
-        this.show = true;
-        this.holdTime = 0;
-        this.move();
+    if (!this.show && Math.random() < this.chance && this.holdTime > this.hTime) {
+        if (this.id == "rock") {
+            if (player.level >= this.rockStrtLvl) {
+                this.show = true;
+                this.holdTime = 0;
+                this.move();
+            }
+        } else if (this.id == "heart") {
+            if (player.level >= 6) {
+                this.show = true;
+                this.holdTime = 0;
+                this.move();
+            }
+        } else if (this.id == "orange" || this.id == "blue" || this.id == "green") {
+            this.show = true;
+            this.holdTime = 0;
+            this.move();
+        }
     } else if (!this.show) {
         this.holdTime += dt;
         this.x = -101;
         this.y = -171;
-    };
+    }
     if (this.show && this.sTime > this.tTime) {
         this.show = false;
         this.x = -101;
@@ -337,38 +413,54 @@ Item.prototype.update = function (dt) {
         this.sTime = 0;
     } else if (this.show) {
         this.sTime += dt;
-    };
-};
+    }
+    if (this.id == "rock") {
+        if (this.x == player.x && this.y + 8 == player.y) {
+            player.x = player.xLast;
+            player.y = player.yLast;
+        }
+    }
+}
 
-Item.prototype.move = function () {//DETECTS IF THERES A FREE SPOT AND MOVES THE GEM TO IT
+Item.prototype.move = function () {//DETECTS IF THERES A FREE SPOT AND MOVES THE ITEM TO IT
     var x = 101 * Math.floor(Math.random() * 5);
-    var y = 63 + 83 * Math.floor(Math.random() * 3);
+    if (this.id == "rock") {
+        var y = 55 + 83 * Math.floor(Math.random() * 4);
+    } else {
+        var y = 63 + 83 * Math.floor(Math.random() * 3);
+    }
     var noMatch = 0;
-    allGems.forEach(function (gem) {
-        if (gem.x != x && gem.y != y) {
+    allItems.forEach(function (item) {
+        if (item.x != x && item.y != y) {
             noMatch ++;
         }
-    });
-    if (allGems.length == noMatch) {
+    })
+    if (allItems.length == noMatch) {
         this.x = x;
         this.y = y;
-    };
-};
+        return;
+    }
+    this.show = false;
+}
 
 /*****************************************************************
+                      
                       CUSTOM FUNCTIONS
 
 ******************************************************************/
 
-function resetAllItems () { //RESET ENEMYS ANG GEMS TO BEGINNING NUM
+function resetAllItems () { //RESET ENEMYS ANG ITEMS TO BEGINNING NUM
     allEnemies = [];
-    allGems = [];
+    allItems = [];
     for (var i = 0; i < 2; i++) {
         addItem("orange");
-    };
+        addItem("rock", i + 1);
+    }
+    addItem("heart");
     player.dead = false;
     player.lives = 3;
     player.level = 1;
+    player.levelUS = 200;
     player.score = 0;
     player.sprite = "images/char-boy.png";
     player.gameOver = false;
@@ -380,35 +472,39 @@ function resetAllItems () { //RESET ENEMYS ANG GEMS TO BEGINNING NUM
     player.imgGameOver = "images/game-over.png";
     player.imgEaten = "images/eaten.png";
     player.imgDrown = "images/drowned.png";
-};
+}
 
-function addItem (item) {
+function addItem (item, multi) {
      switch (item) {
         case "orange":
-            allGems.push(new Item ("orange"));
-            allGems[allGems.length - 1].constructor = Item;
+            allItems.push(new Item ("orange"));
+            allItems[allItems.length - 1].constructor = Item;
             break;
         case "green":
-            allGems.push(new Item("green"));
-            allGems[allGems.length - 1].constructor = Item;
+            allItems.push(new Item("green"));
+            allItems[allItems.length - 1].constructor = Item;
             break;
         case "blue":
-            allGems.push(new Item("blue"));
-            allGems[allGems.length - 1].constructor = Item;
+            allItems.push(new Item("blue"));
+            allItems[allItems.length - 1].constructor = Item;
             break;
         case "heart":
-
+            allItems.push(new Item("heart"));
+            allItems[allItems.length - 1].constructor = Item;
             break;
         case "star":
-
+            allItems.push(new Item("star"));
+            allItems[allItems.length - 1].constructor = Item;
             break;
         case "rock":
-
+            allItems.push(new Item("rock"));
+            allItems[allItems.length - 1].constructor = Item;
+            allItems[allItems.length - 1].rockStrtLvl = 4 * multi;
             break;
         default:
             break;
-     };
-};
+     }
+}
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener("keydown", function(e) {
@@ -419,17 +515,17 @@ document.addEventListener("keydown", function(e) {
         40: "down",
         83: "s",
         68: "d"
-    };
+    }
     //alert(e.keyCode);
     player.handleInput(allowedKeys[e.keyCode]);
-});
+})
 
 
 /*****************************************************************
                       GAME START PROPERTIES
 
 ******************************************************************/
-var allGems = [];
+var allItems = [];
 var allEnemies = [];
 var player = new Player();
 player.constructor = Player;
