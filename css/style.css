@@ -6,6 +6,10 @@ body {
     max-width: 530px;
 }
 
+#frogCan {
+    border: 2px solid black;
+}
+
 /*Sets the Styles for the Top Score*/
 .scores-style {
     margin: auto;

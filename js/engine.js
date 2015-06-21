@@ -32,9 +32,9 @@ var Engine = (function(global) {
 
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
-        
+
         //alert(dt); ** THIS HELPED ME FIGURE OUT HOW TO USE DT!!!!! **
-        
+
         update(dt);
         render();
 
@@ -178,6 +178,10 @@ var Engine = (function(global) {
         'images/Rock.png',
         'images/Selector.png',
         'images/Star.png',
+        'images/Player-Select.png',
+        'images/game-over.png',
+        'images/drowned.png',
+        'images/eaten.png',
     ]);
     Resources.onReady(init);
 
