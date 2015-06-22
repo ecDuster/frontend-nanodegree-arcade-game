@@ -184,6 +184,7 @@ var Engine = (function(global) {
         'images/eaten.png',
         'images/scoreheart.png',
         'images/scoreplus.png',
+        'images/no-select.png'
     ]);
     Resources.onReady(init);
 

@@ -5,7 +5,6 @@
     <title>Duster's Frogger</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/jquery-1.11.2.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -20,6 +19,16 @@
             </div>
         </div>
     </div>
+    <!--AUDIO FOR BACKGROUND MUSIC-->
+    <audio id="bckGrdMusic" src="audio/BckGrndMusic-mix.mp3" type="audio/mpeg" loop></audio>
+    <!--AUDIO FOR GEM PICKUP SOUND-->
+    <audio id="gemSound" src="audio/collectgem.mp3" type="audio/mpeg"></audio>
+    <!--AUDIO FOR HEART PICKUP SOUND-->
+    <audio id="hrtSound" src="audio/Item-pickup.mp3" type="audio/mpeg"></audio>
+    <!--AUDIO FOR LIFE LOST SOUND-->
+    <audio id="lifeLostSound" src="audio/life-lost.mp3" type="audio/mpeg"></audio>
+    <!--AUDIO FOR GAME OVER-->
+    <audio id="gameOverSound" src="audio/game-over.mp3" type="audio/mpeg" ></audio>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>

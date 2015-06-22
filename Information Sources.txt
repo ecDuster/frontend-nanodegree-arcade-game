@@ -1,0 +1,14 @@
+/****USED FOR AUDIO****/
+http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_audio_get
+http://www.w3schools.com/jsref/dom_obj_audio.asp
+http://www.w3schools.com/html/html5_audio.asp
+http://stackoverflow.com/questions/21463752/javascript-audio-object-vs-html5-audio-tag
+
+GOT AUDIO FROM:
+https://www.freesound.org/  **GREAT FOR CC AUDIO BITES
+http://www.nosoapradio.us/  **FOUND BACKGROUND MUSIC HERE
+
+/****USED FOR IMAGES****/
+http://www.techonthenet.com/clipart/keyboard/images/ctrl_key.png
+https://pixabay.com/en/skull-and-crossbones-symbols-signs-26392/
+https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Line_within_circle.svg/1024px-Line_within_circle.svg.png
