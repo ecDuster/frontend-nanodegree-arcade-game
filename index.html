@@ -15,20 +15,31 @@
         </div>
         <div class="row">
             <div class="col-sm-12 canvas">
-                <canvas id="frogCan" class="center-block"></canvas>
+                <!--CREATES THE CANVAS WHERE THE GAME IS DRAWN-->
+                <canvas id="frogCan" class="center-block">Your Browser dose not support HTML5 Canvas</canvas>
             </div>
         </div>
     </div>
     <!--AUDIO FOR BACKGROUND MUSIC-->
-    <audio id="bckGrdMusic" src="audio/BckGrndMusic-mix.mp3" type="audio/mpeg" loop></audio>
+    <audio id="bckGrdMusic" loop>
+        <source src="audio/BckGrndMusic-mix.mp3" type="audio/mpeg">
+    </audio>
     <!--AUDIO FOR GEM PICKUP SOUND-->
-    <audio id="gemSound" src="audio/collectgem.mp3" type="audio/mpeg"></audio>
+    <audio id="gemSound">
+        <source src="audio/collectgem.mp3" type="audio/mpeg">
+    </audio>
     <!--AUDIO FOR HEART PICKUP SOUND-->
-    <audio id="hrtSound" src="audio/Item-pickup.mp3" type="audio/mpeg"></audio>
+    <audio id="hrtSound">
+        <source src="audio/Item-pickup.mp3" type="audio/mpeg">
+    </audio>
     <!--AUDIO FOR LIFE LOST SOUND-->
-    <audio id="lifeLostSound" src="audio/life-lost.mp3" type="audio/mpeg"></audio>
+    <audio id="lifeLostSound">
+        <source src="audio/life-lost.mp3" type="audio/mpeg">
+    </audio>
     <!--AUDIO FOR GAME OVER-->
-    <audio id="gameOverSound" src="audio/game-over.mp3" type="audio/mpeg" ></audio>
+    <audio id="gameOverSound">
+        <source src="audio/game-over.mp3" type="audio/mpeg">
+    </audio>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
