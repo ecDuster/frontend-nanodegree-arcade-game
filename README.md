@@ -31,4 +31,4 @@ To get started:
     
 4) The key is to pick up as many gems as possible. Watch out though, those bugs are nasty!
 
-5) Most importantly, you gotta have fun! Change your colleagues or friends!
+5) Most importantly, you gotta have fun! Challenge your colleagues or friends!

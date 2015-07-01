@@ -8,27 +8,27 @@ This checks that any newly created piece has a valid position
         ~if not moves it off the canvas
 
 ******************************************************************/
-
-var Block = function (x, y) {
+"use strict";
+var Block = function(x, y) {
     if (x) {
         this.x = x;
     } else {
         this.x = -101;
-    };
+    }
     if (y) {
         this.y = y;
     } else {
         this.y = -171;
-    };
+    }
 };
 
 //THIS RENDER FUNCTION ENSURES EVERY PIECE ON THE BOARD IS DRAWN, IT IS CALLED BY ALL CLASS TYPES
-Block.prototype.render = function () {
+Block.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    this.crashChk() //You need to check crashes after the image is drawn. This is because from a players point of view they wouldn't have been hit by the object yet.
+    this.crashChk(); //Need to check crashes after the image is drawn. This is because from a players point of view they wouldn't have been hit by the object yet.
     if (this.constructor === Player) {
         this.scoreBoard();
-    };
+    }
     if (player.gameOver === true) {
         ctx.drawImage(Resources.get(player.imgGameOver), 55, 63+83+30);
     } else if (player.dead === true && player.y < 63) {
@@ -37,26 +37,26 @@ Block.prototype.render = function () {
         ctx.drawImage(Resources.get(player.imgEaten), 55, 63+83+30);
     } else if (player.playerSelect) {
         player.plSelect();
-    };
+    }
 
 };
 
 //THIS CHECK TO SEE IF A PLAYER CRASHED INTO ANY OBJECT
-Block.prototype.crashChk = function () {
+Block.prototype.crashChk = function() {
     if (this.constructor === Enemy) {
         if (this.y == player.y) {
             if (this.x + 97 > player.x + 16 && this.x + 4 < player.x + 82 && !player.dead) {
                 player.death();
-            };
-        };
-    };
+            }
+        }
+    }
     if (this.constructor === Player) {
         if (!this.dead) {
             if (this.y < 62) {
                 player.death();
-            };
-        };
-    };
+            }
+        }
+    }
     if (this.constructor === Item) {
         if (this.y == player.y) {//CHECKS TO SEE IS PLAYER LANDED ON ITEM
             if (this.x + 97 > player.x + 16 && this.x + 4 < player.x + 82) {
@@ -64,15 +64,15 @@ Block.prototype.crashChk = function () {
                     player.score += this.score;
                     this.show = false;
                     gemSound.play();
-                };
+                }
                 if (this.id == 'heart') {
                     player.lives++;
                     this.show = false;
                     hrtSound.play();
-                };
-            };
-        };
-    };
+                }
+            }
+        }
+    }
 };
 
 
@@ -92,22 +92,23 @@ var Enemy = function() {
         this.dir = -1;
     } else {
         this.dir = 1;
-    };
+    }
     if (this.dir == -1) {
         this.sprite = 'images/enemy-bug-rev.png';
     } else {
         this.sprite = 'images/enemy-bug.png';
-    };
+    }
 };
 
 //THIS ALLOWS ENEMY CLASS ACCESS TO BLOCK PARENT CLASS PROTOTYPES
 Enemy.prototype = new Block();
+Enemy.prototype.constructor = Enemy;
 
 //THIS UPDATES THE ENEMIES MOVEMENTS WITHIN THE GAME
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function (dt) {
     if (this.y < 0) {
         this.y = floorSelect();
-    };
+    }
     this.move(dt);
     this.level = player.level/1.5;
 };
@@ -118,8 +119,8 @@ Enemy.prototype.surprise = function () {
     if (player.level > 5) {
         if ( Math.random() < 0.1 ) {
             this.y = 63 + 83 * 3;
-        };
-    };
+        }
+    }
 };
 
 //THIS CONTROLS THE VELOCITY (SPEED & DIRECTION) OF ENEMYS
@@ -129,16 +130,16 @@ Enemy.prototype.move = function (dt) {
             this.x = 555;
             this.y = floorSelect();
             this.surprise();
-        };
+        }
         this.x -= this.level*this.speed*dt;
     } else {
         if (this.x > 555) { //RESETS BUG POSITION TO START FOR BUGS GOING RIGHT
             this.x = -151;
             this.y = floorSelect();
             this.surprise();
-        };
+        }
         this.x += this.level*this.speed*dt;
-    };
+    }
 };
 
 /*****************************************************************
@@ -160,7 +161,7 @@ topScore - .... no you don't get an explanation
 
 var Player = function () {
     this.level = 1;
-    this.levelUS = 200// SETS THE MULTIPLIER TO POINTS REQUIRED TO LEVEL UP
+    this.levelUS = 200;// SETS THE MULTIPLIER TO POINTS REQUIRED TO LEVEL UP
     this.time = 0;
     this.timeDead = 0;
     this.lives = 3;
@@ -186,39 +187,39 @@ var Player = function () {
 
 //GIVES PLAYER CLASS ACCESS TO BLOCK PARENT CLASS FUNCTIONS
 Player.prototype = new Block(202, 63+83*4);
+Player.prototype.constructor = Player;
 
-Player.prototype.update = function(dt) {
+Player.prototype.update = function (dt) {
     if (this.dead) { //CHECKS TO SEE IF PLAYER DIED
         this.sprite = 'images/skull-cartoon.png';
         this.timeDead += dt;
         if (this.timeDead > 3) {
             this.reset();
-        };
-    };
-    if (this.lives == 0) { //CHECKS IF PLAYER HAS LOST ALL LIVES
+        }
+    }
+    if (this.lives === 0) { //CHECKS IF PLAYER HAS LOST ALL LIVES
         this.gameOver = true;
         this.sprite = 'images/skull-cartoon.png';
         goSound.play();
-    };
+    }
     if (this.score > this.topScore) { //CHECKS IF NEW HIGH SCORE REACHED
         this.topScore = this.score;
-    };
+    }
     this.levelUp(dt); //CHECKS FOR NEED OF PLAYER LEVEL UP
 };
 
 Player.prototype.levelUp = function (dt) {//LEVELS PLAYER UP
     if (this.score > this.levelUS) {//CHECKS IF PLAYERS POINTS HAVE REACHED NEXT LEVEL
-        this.level ++
+        this.level ++;
         this.levelUS += this.levelUS;
         if (this.level > 4) {
             this.levelUS -= this.levelUS / 4;
-        };
-        if (this.level % 2 == 0) {
+        }
+        if (this.level % 2 === 0) {
             if (allEnemies.length < 4) {
                 allEnemies.push(new Enemy());
-                allEnemies[allEnemies.length - 1].constructor = Enemy;
-            };
-        };
+            }
+        }
         if (allItems.length < 10) {
             if (Math.random() < 0.2) {
                 addItem('blue');
@@ -226,9 +227,9 @@ Player.prototype.levelUp = function (dt) {//LEVELS PLAYER UP
                 addItem('green');
             } else if (Math.random() < 0.7) {
                 addItem('orange');
-            };
-        };
-    };
+            }
+        }
+    }
 };
 
 //RESETS THE PLAYERS POSITION TO THE STARTING POSITION
@@ -243,9 +244,9 @@ Player.prototype.reset = function () {
 //THIS KILLS THE PLAYER, AND TAKES A LIFE
 Player.prototype.death = function () {
     this.lives --;
-    if (this.lives != 0) {
+    if (this.lives !== 0) {
         llSound.play();
-    };
+    }
     this.dead = true;
     this.playerSelect = false;
 };
@@ -262,24 +263,24 @@ Player.prototype.handleInput = function (input) {
                     this.x -= 101;
                 } else if (this.selX > 100 && this.playerSelect) {
                     this.selX -= 91;
-                };
+                }
                 break;
             case 'right':
-                if (this.x < 384 && !this.playerSelect) {
+                if (this.x < 404 && !this.playerSelect) {
                     this.x += 101;
-                } else if (this.selX < 404 && this.playerSelect) {
+                } else if (this.selX < 384 && this.playerSelect) {
                     this.selX += 91;
-                };
+                }
                 break;
             case 'up':
                 if (this.y > 62 && !this.playerSelect) {
                     this.y -= 83;
-                };
+                }
                 break;
             case 'down':
                 if (this.y < 395 && !this.playerSelect) {
                     this.y += 83;
-                };
+                }
                 break;
             case 'p':
                 this.playerSelect = true;
@@ -308,15 +309,16 @@ Player.prototype.handleInput = function (input) {
                         this.sprite = this.spriteChar4;
                         this.oldSprite = this.spriteChar4;
                         this.playerSelect = false;
-                    };
-                };
+                    }
+                }
+                break;
             default:
                 break;
-        };
-    };
+        }
+    }
     if (input == 'r') { // RESETS THE GAME
         resetAllItems();
-    };
+    }
 };
 
 //BELOW ARE 2 PLAYER FUNCTIONS THAT ALSO DRAW OUT MESSAGES, ALL OTHER ELEMENTS RELY ON RENDER
@@ -337,10 +339,10 @@ Player.prototype.scoreBoard = function () { //DRAWS THE SCORE BOARD
         if (i >= 3) {
             ctx.drawImage(Resources.get('images/scoreplus.png'), 392 - 27 * i, 0);
             break;
-        };
+        }
         ctx.drawImage(Resources.get('images/scoreheart.png'), 392 - 27 * i, 0);
-    };
-    
+    }
+
     //DRAW LEVELS
     ctx.fillText(this.level + ' :LEVEL', 505, 45);
 
@@ -359,8 +361,8 @@ Player.prototype.plSelect = function () {
          ctx.drawImage(Resources.get(this['spriteChar'+i]), 20 + 91 * i, 330);
         if (this['char'+i+'Score'] > this.topScore) {
             ctx.drawImage(Resources.get('images/no-select.png'), 20 + 91 * i, 330);
-        };
-    };
+        }
+    }
 };
 
 /*****************************************************************
@@ -428,7 +430,7 @@ var Item = function (item) {
             break;
         default:
             break;
-    };
+    }
     this.show = false;
     this.sTime = 0;
     this.holdTime = 0;
@@ -436,6 +438,7 @@ var Item = function (item) {
 
 //GIVES ITEMS THE ACCESS TO BLOCK FUNCTIONS, AND SETS DEFAULT POSITION
 Item.prototype = new Block();
+Item.prototype.constructor = Item;
 
 //CONTROLS THE TIME IN AND OUT OF EACH ITEM ON THE BOARD. CONTROLS WHEN TO SHOW THEM, AND WHEN NOT TO
 Item.prototype.update = function (dt) {
@@ -445,23 +448,23 @@ Item.prototype.update = function (dt) {
                 this.show = true;
                 this.holdTime = 0;
                 this.move();
-            };
+            }
         } else if (this.id == 'heart') {
             if (player.level >= 6) {
                 this.show = true;
                 this.holdTime = 0;
                 this.move();
-            };
+            }
         } else if (this.id == 'orange' || this.id == 'blue' || this.id == 'green') {
             this.show = true;
             this.holdTime = 0;
             this.move();
-        };
+        }
     } else if (!this.show) {
         this.holdTime += dt;
         this.x = -101;
         this.y = -171;
-    };
+    }
     if (this.show && this.sTime > this.tTime) {
         this.show = false;
         this.x = -101;
@@ -469,22 +472,23 @@ Item.prototype.update = function (dt) {
         this.sTime = 0;
     } else if (this.show) {
         this.sTime += dt;
-    };
+    }
     if (this.id == 'rock') {
         if (this.x == player.x && this.y + 8 == player.y) {
             player.x = player.xLast;
             player.y = player.yLast;
-        };
-    };
+        }
+    }
 };
 
 Item.prototype.move = function () {//DETECTS IF THERES A FREE SPOT AND MOVES THE ITEM TO IT
     var x = 101 * Math.floor(Math.random() * 5);
+    var y = 63;
     if (this.id == 'rock') {
-        var y = 55 + 83 * Math.floor(Math.random() * 4);
+        y = 55 + 83 * Math.floor(Math.random() * 4);
     } else {
-        var y = floorSelect();
-    };
+        y = floorSelect();
+    }
     var noMatch = 0;
     allItems.forEach(function (item) {
         if (item.x != x && item.y != y) {
@@ -495,7 +499,7 @@ Item.prototype.move = function () {//DETECTS IF THERES A FREE SPOT AND MOVES THE
         this.x = x;
         this.y = y;
         return;
-    };
+    }
     this.show = false;
 };
 
@@ -518,17 +522,17 @@ Item.prototype.move = function () {//DETECTS IF THERES A FREE SPOT AND MOVES THE
         - Rock - creates a rock which will spawn at a certain multi of the players' level
         - Heart - self explanatory.... adds a life (Only shows up at level 6)
         - Star - Has not been added into the game... doesn't do anything yet
-        
-        
+
+
 ******************************************************************/
 
 //THIS FUNCTION HELPS RANDOMLY SELECT WHICH FLOORS ENEMYS APPEAR ON
-function floorSelect () {
+function floorSelect() {
     return 63 + 83 * Math.floor(Math.random()*3);
 }
 
 //THIS FUNCTION RESETS THE GAME
-function resetAllItems () {
+function resetAllItems() {
     allEnemies = [];
     allItems = [];
     for (var i = 0; i < 2; i++) {
@@ -552,39 +556,33 @@ function resetAllItems () {
 }
 
 //THIS FUNCTION ADDS ITEMS TO THE allItems ARRAY
-function addItem (item, multi) {
+function addItem(item, multi) {
      switch (item) {
         case 'orange':
             allItems.push(new Item ('orange'));
-            allItems[allItems.length - 1].constructor = Item;
             break;
         case 'green':
             allItems.push(new Item('green'));
-            allItems[allItems.length - 1].constructor = Item;
             break;
         case 'blue':
             allItems.push(new Item('blue'));
-            allItems[allItems.length - 1].constructor = Item;
             break;
         case 'heart':
             allItems.push(new Item('heart'));
-            allItems[allItems.length - 1].constructor = Item;
             break;
         case 'star':
             allItems.push(new Item('star'));
-            allItems[allItems.length - 1].constructor = Item;
             break;
         case 'rock':
             allItems.push(new Item('rock'));
-            allItems[allItems.length - 1].constructor = Item;
             allItems[allItems.length - 1].rockStrtLvl = 4 * multi;
             break;
         default:
             break;
-     };
+     }
 }
 
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
@@ -612,7 +610,6 @@ IN GAME MUSIC - must be called with '.play()' to work
 
 var bgMusic = document.getElementById('bckGrdMusic'); //GETS BACKGROUND MUSIC FROM HTML
 var gemSound = document.getElementById('gemSound'); //GETS GEM SOUND FROM HTML
-var gemSnd = false;
 var hrtSound = document.getElementById('hrtSound'); //GETS HEART SOUND FROM HTML
 var goSound = document.getElementById('gameOverSound'); //GETS GAME OVER SOUND FROM HTML
 var llSound = document.getElementById('lifeLostSound'); //GETS LIVE LOST SOUND FROM HTML
@@ -630,5 +627,4 @@ IN GAME MUSIC - also must be declared
 var allItems = [];
 var allEnemies = [];
 var player = new Player();
-player.constructor = Player;
 bgMusic.play(); //STARTS THE BACKGROUND MUSIC
