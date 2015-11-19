@@ -1,0 +1,202 @@
+[33mcommit fd5e44c43bb1bba570a3018834a5f7e4b10ce928[m
+Author: ecDusty <ecmgit@outlook.com>
+Date:   Wed Jul 1 16:18:43 2015 +0800
+
+    Version 3.3 Second Submission and Passed
+    
+    Cleaned up the javascript
+
+[33mcommit 260800515f5638efbdeee098e856af3a47db5593[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Tue Jun 23 15:56:23 2015 +0630
+
+    Version 3.2 - Submitted Frogger Game
+    
+    This is my frogger game that was submitted for Project 3 of Udacity
+
+[33mcommit 08cb6e84bc2296c95780de464bff31ca0227606f[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Mon Jun 22 20:17:29 2015 +0630
+
+    Version 3.0 - Dusty's Frogger Re-imagined
+    
+    It is a fully working game, complete with sounds, score board, lives,
+    hearts, collectable gems, person eating bugs, water you can drawn in and
+    more. A player, once they have achieved a certain score, can unlock
+    different characters to play. Come and check out my very first game.
+
+[33mcommit 77626def3cdb089daba3f86b3f03797fde6d8bfe[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Sun Jun 21 19:29:14 2015 +0630
+
+    Version 2.0
+    
+    Its a fully working game. There is no player character select. I don't
+    have an intro screen or a controls screen
+
+[33mcommit d1e661bb7ecd2f754f6d22bc7ee237cfa58a182a[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Sun Jun 21 12:12:44 2015 +0800
+
+    Dusty's Frogger Version 1.1
+    
+    Now with pop ups  to tell the player when they have died, and how they
+    have died. Also how the game has ended.
+
+[33mcommit cf63a008d54b854728b92ef2880bb986251306b4[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Mon Jun 15 00:06:21 2015 +0800
+
+    Version 1.0
+    
+    Fully Operating Game. Player has a Score and a Top score... though it
+    doesn't show. Enemies get harder and player levels up by gaining points
+    by picking up gems.
+
+[33mcommit cb6d9bf98b923cbf72dbe69e85a94c08573837d4[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Sun Jun 14 22:58:46 2015 +0800
+
+    Version 0.8
+    
+    Gems have been added. The player can collect them, and add to their
+    score (Which they can't see as its not being show on the screen.) Also
+    gems show and hide way too fast. I need to make sure they use dt
+    counting to slow them down!!
+
+[33mcommit ce540e6137da844543b8b31367547dea591fa6ac[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Sun Jun 14 15:48:18 2015 +0800
+
+    Version 0.75
+    
+    A running game (Player has lives). Now to make it interesting
+
+[33mcommit b4f100108f8a963804e12425398bff2506e52b19[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Sat Jun 13 00:02:32 2015 +0800
+
+    Version 0.6 - Lives
+    
+    The player now has lives & CAN LOSE THEM! When running into a bug. the
+    player loses a life. If his lives reach 0 he can no longer move.
+
+[33mcommit 9b570993f39d38c1f81e2e8e853a9cf50834c824[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Thu Jun 11 22:49:46 2015 +0800
+
+    Version 0.6
+    
+    Bugs move at different speeds. They move faster and the player levels
+    up. Player has lives. Use the "s" key to set player levels and test
+    different speeds. Also after level 4, bugs start to appear on a grass
+    row! Be careful. There is yet any way to die or lose lives though. Also
+    there is no way to keep track of score.
+
+[33mcommit e6832001e998ed4286dbe91230ec0d7b0ed90f44[m
+Author: ecDuster <ecmgit@outlook.com>
+Date:   Thu Jun 11 22:10:35 2015 +0800
+
+    Frogger Game Version 0.5
+    
+    Player can move and there are moving enemies on the board.
+
+[33mcommit 919fd7dbe3a9ae7587da2b51967bb852ff48390c[m
+Author: ecDusty <ecmgit@outlook.com>
+Date:   Wed Jun 10 00:02:55 2015 +0800
+
+    V 0.12
+    
+    I've gotten the image to appear on the proper spot within my prearranged
+    DOM!
+
+[33mcommit fe22091268bc1ee6272820de3726aaabb8370d53[m
+Author: ecDusty <ecmgit@outlook.com>
+Date:   Tue Jun 9 23:48:44 2015 +0800
+
+    Version 0.1
+    
+    The game is drawing to a canvas, not the right canvas. Nothing has been
+    added in.
+
+[33mcommit 3d1597d2fb23dd7b71b3fd61c91ac0ef5551e339[m
+Merge: a812349 ab9724b
+Author: John Mavroudis <johnathan@udacity.com>
+Date:   Wed Mar 25 09:00:25 2015 -0700
+
+    Merge pull request #18 from bcuz/master
+    
+    Declare character encoding
+
+[33mcommit ab9724b6208856eae45def3801572f2cfc158f11[m
+Author: Adam Nawrocki <adam.nawroc@gmail.com>
+Date:   Wed Mar 25 11:15:08 2015 -0400
+
+    Declare character encoding
+
+[33mcommit a812349afb3429d7a88e6881f29fb0f15303ab4f[m
+Author: Mike Wales <michael.wales@udacity.com>
+Date:   Wed Nov 5 13:35:36 2014 -0800
+
+    Removed extraneous patterns var
+
+[33mcommit 10457a7ed9e94dbb03bb52c1d98eb6171be50056[m
+Author: Mike Wales <michael.wales@udacity.com>
+Date:   Wed Nov 5 11:51:10 2014 -0800
+
+    Additional comments added to engine.js
+
+[33mcommit 4d53464e0da48de592f06fd4bec7a5e711b36f81[m
+Author: Mike Wales <michael.wales@udacity.com>
+Date:   Wed Nov 5 10:55:41 2014 -0800
+
+    Added additional comments to js/resources.js
+
+[33mcommit 540467c9694f1428cfbc3f9291b26c487389b3e3[m
+Merge: fdb8511 a4c4fc9
+Author: Mike Wales <michael.wales@udacity.com>
+Date:   Wed Nov 5 10:40:16 2014 -0800
+
+    Merge branch 'master' of https://github.com/udacity/frontend-nanodegree-arcade-game
+    
+    * 'master' of https://github.com/udacity/frontend-nanodegree-arcade-game:
+      Include rubric
+
+[33mcommit a4c4fc92bc80abbb135dbd44b129003758bd3446[m
+Merge: fdb8511 28de148
+Author: Michael Wales <webmaster@michaelwales.com>
+Date:   Tue Oct 14 11:45:14 2014 -0700
+
+    Merge pull request #2 from durant-udacity/patch-1
+    
+    Include rubric
+
+[33mcommit fdb85118426198c42c50ed27e2153f3922b175d5[m
+Author: Mike Wales <michael.wales@udacity.com>
+Date:   Tue Oct 14 09:47:32 2014 -0700
+
+    Moved *.js files to js/ directory, moved *.css files to css/ directory
+
+[33mcommit 683afb75241479a7969df9ac3074fec0b9bd79ab[m
+Author: Mike Wales <michael.wales@udacity.com>
+Date:   Mon Oct 6 13:33:35 2014 -0700
+
+    Removed double Resources.get() bug in Enemy class
+
+[33mcommit 28de148a2077c847c8fd8f81fa769160b0600e29[m
+Author: durant-udacity <durant@udacity.com>
+Date:   Thu Oct 2 11:43:42 2014 -0700
+
+    Include rubric
+
+[33mcommit 69992cf9a5b1c7aab5296e43a6467d2f9bfa8114[m
+Author: Mike Wales <michael.wales@udacity.com>
+Date:   Tue Sep 23 13:21:24 2014 -0700
+
+    Initial project commit.
+
+[33mcommit 6471daaeab4e61563f3fb8020948f5c6c7408f36[m
+Author: Nicolas Artman <nicolasartman@users.noreply.github.com>
+Date:   Tue Sep 23 03:08:40 2014 -0700
+
+    Initial commit
